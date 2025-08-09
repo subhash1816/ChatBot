@@ -30,6 +30,9 @@ import com.example.chatbot.ui.utils.EmailField
 import com.example.chatbot.ui.utils.GenericTv
 import com.example.chatbot.ui.utils.PasswordField
 import com.example.chatbot.ui.utils.TextButtonTv
+import com.example.chatbot.utils.Constants.Companion.BUTTON_LOGIN
+import com.example.chatbot.utils.Constants.Companion.LOGIN
+import com.example.chatbot.utils.Constants.Companion.NOT_HAVE_ACCOUNT
 import com.example.chatbot.viewmodel.LoginViewModel
 import kotlin.math.log
 
@@ -44,7 +47,6 @@ fun LoginScreen(
     when (loginState) {
         is LoginState.Loading -> CustomLinearProgressBar()
         is LoginState.Error -> {
-            Log.d("Subhash", "LoginScreen:Errpr ${(loginState as LoginState.Error).message} ")
             CustomToast(message = (loginState as LoginState.Error).message)
         }
 
@@ -71,7 +73,7 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GenericTv(text = "Login")
+        GenericTv(text = LOGIN)
         Spacer(Modifier.height(16.dp))
         EmailField(loginViewModel.email)
         Spacer(Modifier.height(8.dp))
@@ -83,11 +85,11 @@ fun LoginScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextButtonTv("Login")
+            TextButtonTv(BUTTON_LOGIN)
         }
         Spacer(Modifier.height(8.dp))
         TextButton(onClick = onNavigateToRegister) {
-            ButtonTv("Don't have an account? Register")
+            ButtonTv(NOT_HAVE_ACCOUNT)
         }
     }
 }

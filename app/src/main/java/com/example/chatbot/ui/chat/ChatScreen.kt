@@ -71,6 +71,9 @@ import androidx.navigation.NavHostController
 import com.example.chatbot.R
 import com.example.chatbot.ui.navigation.NavRoutes
 import com.example.chatbot.ui.utils.CustomToast
+import com.example.chatbot.utils.Constants.Companion.CHATBOT_NAME
+import com.example.chatbot.utils.Constants.Companion.PERMISSION_DENIED
+import com.example.chatbot.utils.Constants.Companion.SIGNOUT
 import com.example.chatbot.utils.TextFieldValidator
 import com.example.chatbot.utils.formatTimestamp
 import com.example.chatbot.viewmodel.ChatViewModel
@@ -126,7 +129,7 @@ fun ChatScreen(chatViewModel: ChatViewModel, navController: NavHostController) {
         if (isGranted) {
             chatViewModel.startService()
         } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, PERMISSION_DENIED, Toast.LENGTH_SHORT).show()
         }
     }
     when (state) {
@@ -216,7 +219,7 @@ fun TopSection(onSignOut: () -> Unit) {
             Image(painter = painterResource(R.drawable.chatbot), contentDescription = "chatbot")
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Chatbot",
+                text = CHATBOT_NAME,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W600,
                 color = colorResource(R.color.color_4f3267),
@@ -226,7 +229,7 @@ fun TopSection(onSignOut: () -> Unit) {
         Row {
             TextButton(onClick = { onSignOut() }) {
                 Text(
-                    text = "SignOut",
+                    text = SIGNOUT,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.W600,
                     color = colorResource(R.color.color_8863fb),
@@ -239,33 +242,7 @@ fun TopSection(onSignOut: () -> Unit) {
     }
 }
 
-@Composable
-fun QueryField1(textFieldValidator: TextFieldValidator) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(8.dp)
-    ) {
-        OutlinedTextField(
-            value = textFieldValidator.text,
-            onValueChange = { textFieldValidator.text = it },
-            modifier = Modifier.weight(1f),
-            placeholder = {
-                Text(
-                    modifier = Modifier,
-                    text = textFieldValidator.placeholder,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.W400,
-                    color = colorResource(R.color.color_4f3267),
-                    lineHeight = 16.sp,
-                    letterSpacing = 0.15.sp,
-                )
-            },
-            singleLine = true,
-        )
-    }
-}
+
 
 @Composable
 fun QueryField(

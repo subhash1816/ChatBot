@@ -45,6 +45,9 @@ import com.example.chatbot.ui.utils.GenericTv
 import com.example.chatbot.ui.utils.LabelTv
 import com.example.chatbot.ui.utils.PasswordField
 import com.example.chatbot.ui.utils.TextButtonTv
+import com.example.chatbot.utils.Constants.Companion.ALREADY_HAVE_ACCOUNT
+import com.example.chatbot.utils.Constants.Companion.BUTTON_REGISTER
+import com.example.chatbot.utils.Constants.Companion.REGISTER
 import com.example.chatbot.viewmodel.RegisterViewModel
 import kotlinx.coroutines.flow.collect
 
@@ -84,7 +87,7 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GenericTv(text = "Register")
+        GenericTv(text = REGISTER)
 
         Spacer(Modifier.height(16.dp))
 
@@ -177,13 +180,13 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextButtonTv("Register")
+            TextButtonTv(BUTTON_REGISTER)
         }
 
         Spacer(Modifier.height(8.dp))
 
         TextButton(onClick = onNavigateBack) {
-            ButtonTv("Already have an account? Login")
+            ButtonTv(ALREADY_HAVE_ACCOUNT)
         }
     }
 }

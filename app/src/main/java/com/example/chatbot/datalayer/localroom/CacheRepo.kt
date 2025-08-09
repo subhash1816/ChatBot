@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
  *
  * Logic:
  * - If the network is available, fetch from API, cache to Room, and return.
- * - If offline, load data from Room.
+ * - If offline, show offline screen
  */
 
 class CacheRepo(private val cacheDao: CacheDao) {

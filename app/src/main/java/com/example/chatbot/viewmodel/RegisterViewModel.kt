@@ -4,6 +4,16 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatbot.ui.login.LoginState
+import com.example.chatbot.utils.Constants.Companion.CONFIRM_PASSWORD_LABEL
+import com.example.chatbot.utils.Constants.Companion.EMAIL_LABEL
+import com.example.chatbot.utils.Constants.Companion.ENTER_CONFIRM_PASSWORD
+import com.example.chatbot.utils.Constants.Companion.ENTER_VALID_EMAIL
+import com.example.chatbot.utils.Constants.Companion.ENTER_VALID_NAME
+import com.example.chatbot.utils.Constants.Companion.ENTER_VALID_PASSWORD
+import com.example.chatbot.utils.Constants.Companion.NAME_LABEL
+import com.example.chatbot.utils.Constants.Companion.PASSWORD_LABEL
+import com.example.chatbot.utils.Constants.Companion.PASSWORD_MISMATCH
+import com.example.chatbot.utils.Constants.Companion.REGISTRATION_FAILED
 import com.example.chatbot.utils.CustomerInfo
 import com.example.chatbot.utils.TextFieldValidator
 import com.google.firebase.auth.FirebaseAuth
@@ -32,15 +42,15 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
 
 
     init {
-        name.label = "Name"
-        email.label = "Email"
-        password.label = "Password"
-        confirmPassword.label = "Confirm Password"
+        name.label = NAME_LABEL
+        email.label = EMAIL_LABEL
+        password.label = PASSWORD_LABEL
+        confirmPassword.label = CONFIRM_PASSWORD_LABEL
 
-        name.errorMessage = "Please Enter Name"
-        email.errorMessage = "Please Enter Email"
-        password.errorMessage = "Please Enter Password"
-        confirmPassword.errorMessage = "Please Enter Confirm Password"
+        name.errorMessage =  ENTER_VALID_NAME
+        email.errorMessage = ENTER_VALID_EMAIL
+        password.errorMessage = ENTER_VALID_PASSWORD
+        confirmPassword.errorMessage = ENTER_CONFIRM_PASSWORD
 
     }
 
@@ -55,7 +65,7 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
             confirmPassword.setErrorState(true)
         } else if (password.text != confirmPassword.text) {
             confirmPassword.setErrorState(true)
-            confirmPassword.errorMessage = "Password and Confirm Password should be same"
+            confirmPassword.errorMessage = PASSWORD_MISMATCH
         } else {
             viewModelScope.launch {
                 _loginState.update { LoginState.Loading }
@@ -64,7 +74,7 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
                     CustomerInfo.email = auth.currentUser?.email.toString()
                     _loginEvents.emit(LoginState.Success)
                 } catch (e: Exception) {
-                    _loginState.update { LoginState.Error(e.message ?: "Registration failed") }
+                    _loginState.update { LoginState.Error(e.message ?: REGISTRATION_FAILED) }
                 } finally {
                     delay(2000L)
                     _loginState.update { LoginState.Idle }

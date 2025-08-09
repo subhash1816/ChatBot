@@ -37,6 +37,7 @@ This app follows a layered architecture:
 **Authentication**: Firebase Auth  
 **Voice Input**: Android SpeechRecognizer API  
 **Network Monitoring**: ConnectivityManager with callbackFlow
+**Networking**: Retrofit + OkHttp
 
 ---
 
@@ -55,8 +56,9 @@ This app follows a layered architecture:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-repo-link.git
+   git clone https://github.com/subhash1816/ChatBot
    cd your-project-folder
+   mocky link: https://mocki.io/v1/3e495f20-1b1c-4cc2-8eb0-0ba997ebd6c3
    ```
 2. **Open in Android Studio**
 Open the cloned project in Android Studio (latest stable version recommended).
@@ -95,7 +97,16 @@ Built with Jetpack Compose for reactive UI updates.
 Uses collectAsStateWithLifecycle for observing StateFlow from the ViewModel.
 
 **Hardcoded Chatbot Response**:
-A simple, predefined list of messages simulates chatbot replies for demonstration without an actual backend.
+A simple, predefined list of messages simulates chatbot replies for demonstration from the mocky API.
+
+**Retrofit**
+Used for network requests, that will fetch the bot response from the mock API.
+
+**Flow Explanation**
+Once the user successfully logs in or registers using Firebase Authentication, the app checks if there are already existing chat conversations stored in the Room database. 
+If available, these past messages are immediately displayed in the chat screen.
+When the user sends a new message through the text field, the app makes an API call (mocked or real) to get the chatbot’s response. 
+Both the user’s message and the bot’s reply are stored in Room for offline access and synced to the UI in real time using Kotlin Flow. This ensures that conversations are preserved locally, even when the app is restarted or used offline.
 
 ---
 
@@ -109,6 +120,7 @@ A simple, predefined list of messages simulates chatbot replies for demonstratio
 | Speech Input      | Android SpeechRecognizer API              |
 | Coroutine Scope   | viewModelScope (Kotlin Coroutines)        |
 | Network Check     | ConnectivityManager + Flow                |
+| Networking        | Retrofit, OkHttp                          |
 
 ---
 
@@ -138,6 +150,9 @@ Displays chat messages, text input field with mic icon, and handles speech input
 
 🔹 **NoNetworkScreen.kt**  
 Shown when network is unavailable.
+
+🔹 **RegisterViewModel.kt**
+Handles registration logic.
 
 ---
 

@@ -32,7 +32,6 @@ import com.example.chatbot.ui.theme.ChatbotTheme
 import com.example.chatbot.ui.utils.CustomLinearProgressBar
 import com.example.chatbot.ui.utils.NoNetworkDialog
 import com.example.chatbot.utils.Constants.Companion.NAV_WEBVIEW_URL
-import com.example.chatbot.utils.Constants.Companion.REQUEST_CODE_SPEECH_INPUT
 import com.example.chatbot.utils.CustomerInfo
 import com.example.chatbot.utils.NetworkMonitor
 import com.example.chatbot.utils.defaultEnterTransition

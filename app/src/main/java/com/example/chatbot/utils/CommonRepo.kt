@@ -26,7 +26,7 @@ object BaseNetworkSetup {
         .build()
 
     private var retrofitUrl: Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.github.com/")
+        .baseUrl("https://mocki.io/")
          .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

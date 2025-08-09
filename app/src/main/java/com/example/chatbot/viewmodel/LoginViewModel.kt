@@ -5,6 +5,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatbot.ui.login.LoginState
+import com.example.chatbot.utils.Constants.Companion.EMAIL_LABEL
+import com.example.chatbot.utils.Constants.Companion.ENTER_VALID_EMAIL
+import com.example.chatbot.utils.Constants.Companion.ENTER_VALID_PASSWORD
+import com.example.chatbot.utils.Constants.Companion.LOGIN_FAILED
+import com.example.chatbot.utils.Constants.Companion.PASSWORD_LABEL
 import com.example.chatbot.utils.CustomerInfo
 import com.example.chatbot.utils.TextFieldValidator
 import com.google.firebase.auth.FirebaseAuth
@@ -32,18 +37,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
 
-        email.label = "Email"
-        password.label = "Password"
-        email.errorMessage = "Please Enter Valid Email"
-        password.errorMessage = "Please Enter Valid Password"
+        email.label = EMAIL_LABEL
+        password.label = PASSWORD_LABEL
+        email.errorMessage = ENTER_VALID_EMAIL
+        password.errorMessage = ENTER_VALID_PASSWORD
 
 
     }
 
     fun onLoginClick() {
-       /* viewModelScope.launch {
-            _loginEvents.emit(LoginState.Success)
-        }*/
+
         if (email.isValidEmail().not()) {
             email.setErrorState(true)
         } else if (password.text.isEmpty()) {
@@ -63,7 +66,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
                             _loginState.update {
                                 LoginState.Error(
-                                    task.exception?.message ?: "Login failed"
+                                    task.exception?.message ?: LOGIN_FAILED
                                 )
                             }
                         }

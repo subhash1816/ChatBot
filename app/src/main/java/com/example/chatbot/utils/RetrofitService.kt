@@ -1,6 +1,7 @@
 package com.example.chatbot.utils
 
 
+import com.example.chatbot.datalayer.model.BotResponseModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,11 +14,7 @@ import retrofit2.http.Query
 
 interface RetrofitService {
 
-    @GET("search/repositories")
-    suspend fun getUrlData(
-        @Query("q") query: String,
-        @Query("sort") sort: String,
-        @Query("order") order: String
-    ): Response<String?>?
+    @GET("/v1/3e495f20-1b1c-4cc2-8eb0-0ba997ebd6c3")
+    suspend fun getUrlData(): Response<BotResponseModel>?
 
 }

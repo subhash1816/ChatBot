@@ -21,12 +21,14 @@ import com.example.chatbot.datalayer.localroom.CacheDataBase
 import com.example.chatbot.datalayer.localroom.CacheEntity
 import com.example.chatbot.datalayer.localroom.CacheRepo
 import com.example.chatbot.datalayer.model.MessageItem
+import com.example.chatbot.datalayer.repository.ChatRepo
 import com.example.chatbot.ui.chat.ChatState
 import com.example.chatbot.ui.login.LoginState
-import com.example.chatbot.utils.Constants.Companion.NO_INTERNET
+import com.example.chatbot.utils.Constants.Companion.QUERY_PLACEHOLDER
 import com.example.chatbot.utils.CustomerInfo
 import com.example.chatbot.utils.TextFieldValidator
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +37,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 /**
@@ -49,13 +53,8 @@ import java.util.Locale
 
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _uiState = MutableSharedFlow<ChatState>()
-    val uiState = _uiState.asSharedFlow()
-    private val _noNetwork = MutableSharedFlow<ChatState>()
-    val noNetwork  = _noNetwork.asSharedFlow()
-    var showProgress: Boolean by mutableStateOf(false)
-    private val auth = FirebaseAuth.getInstance()
 
+    private val auth = FirebaseAuth.getInstance()
 
     private val _chatState = MutableStateFlow<ChatState>(ChatState.Idle)
     val chatState = _chatState.asStateFlow()
@@ -65,57 +64,56 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private var speechRecognizer: SpeechRecognizer? = null
     var isListening: Boolean by mutableStateOf(false)
 
-    private val botMessagesList = listOf(
-        "Hello! How can I help you today?",
-        "I'm here to assist you with that.",
-        "Could you clarify what you mean?",
-        "Interesting! Tell me more.",
-        "I understand. Let’s work through it.",
-        "That’s a great question!",
-        "I’m not sure about that, but I can look it up.",
-        "Here’s what I found on that topic.",
-        "Got it! Let’s proceed.",
-        "That might need more information to solve.",
-        "Let me break that down for you.",
-        "Can you provide an example?",
-        "I can help you with the next steps.",
-        "Thanks for sharing that.",
-        "That’s worth exploring further.",
-        "I see your point.",
-        "Here’s a suggestion you might like.",
-        "That’s a tricky one, but here’s my take.",
-        "I think we can simplify this.",
-        "Alright, let’s get started!"
-    )
-
     private val cacheDb = CacheDataBase.getInstance(application)
-    val cacheRepo = CacheRepo(cacheDb.cacheDao())
+    private val cacheRepo = CacheRepo(cacheDb.cacheDao())
 
     val messages: StateFlow<List<CacheEntity>> = cacheRepo.getFromCache(CustomerInfo.email)
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     init {
-        queryField.placeholder = "Type your message here"
+        queryField.placeholder = QUERY_PLACEHOLDER
         initializeSpeechRecognizer()
     }
 
     fun onSendClick() {
-        Log.d("Subhash", "onSendClick: ")
         viewModelScope.launch {
             cacheRepo.saveToCache(
                 msg = queryField.text,
                 userId = CustomerInfo.email,
                 isUser = true
             )
-            delay(500L)
             queryField.text = ""
-            cacheRepo.saveToCache(
-                msg = botMessagesList.random(),
-                userId = CustomerInfo.email,
-                isUser = false
-            )
+            fetchBotResp()
         }
 
+    }
+
+    private suspend fun fetchBotResp() {
+        try {
+            val response = withContext(Dispatchers.IO) { ChatRepo.fetchRemoteData() }
+            if (response?.isSuccessful == true) {
+                response.body()?.let {
+                    cacheRepo.saveToCache(
+                        msg = it.reponseList?.random() ?: "Welcome to AI",
+                        userId = CustomerInfo.email,
+                        isUser = false
+                    )
+                }
+            } else {
+                _chatState.emit(ChatState.Failure(response?.message()))
+                delay(1000)
+                resetState()
+            }
+        } catch (e:Exception) {
+            _chatState.emit(ChatState.Failure(e.localizedMessage?.toString()))
+            delay(1000)
+            resetState()
+        }
+
+    }
+
+    private fun resetState() {
+        _chatState.update { ChatState.Idle }
     }
 
     fun signout() {
@@ -134,6 +132,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onError(error: Int) {
                     viewModelScope.launch {
                         _chatState.emit(ChatState.Failure(error.toString()))
+                        delay(1000)
+                        resetState()
                     }
                     isListening = false
                 }
