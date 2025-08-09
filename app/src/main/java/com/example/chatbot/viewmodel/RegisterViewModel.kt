@@ -55,7 +55,7 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun onRegisterClick() {
-        if (name.text.isEmpty() && name.text.matches(Regex("^[a-zA-Z ]*\$"))) {
+        if (name.text.isEmpty() || !name.text.matches(Regex("^[a-zA-Z ]*\$"))) {
             name.setErrorState(true)
         } else if (email.isValidEmail().not()) {
             email.setErrorState(true)
