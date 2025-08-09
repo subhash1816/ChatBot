@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Chat bubble -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M4,3
+                         h16
+                         a1,1 0 0 1 1,1
+                         v12
+                         a1,1 0 0 1 -1,1
+                         h-6
+                         l-4,3
+                         v-3
+                         H4
+                         a1,1 0 0 1 -1,-1
+                         V4
+                         a1,1 0 0 1 1,-1
+                         z" />
+
+    <!-- Left eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8,9
+                         a1,1 0 1,0 0.001,0 z" />
+
+    <!-- Right eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,9
+                         a1,1 0 1,0 0.001,0 z" />
+
+    <!-- Smile -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9,13
+                         a3,1 0 0 0 6,0" />
+</vector>
